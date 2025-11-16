@@ -5,7 +5,8 @@
 <br />
 <ul class="list-group list-group-flush" id="notes">
   {% for note in user.notes %}
-  <li class="list-group-item">{{ note.data }}
+  <li class="list-group-item">
+    <div style="white-space: pre-wrap;">{{ note.data }}</div> 
     <button type="button" class="close" onClick="deleteNote({{ note.id }})">
       <span aria-hidden="true">&times;</span>
     </button>
