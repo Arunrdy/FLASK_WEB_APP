@@ -143,7 +143,7 @@ http://127.0.0.1:5000
 ## 📬 **Contact & Support**
 ----------------------------------------
 **GitHub:** https://github.com/Arunrdy  
-**Email:** arunrdy@gmail.com  
+**Email:** arunrdyy@gmail.com  
 
 If you find this project helpful, **please consider starring the repository** —  
 your support encourages me to build more high-quality and professional applications! ⭐
