@@ -6,13 +6,118 @@
 <ul class="list-group list-group-flush" id="notes">
   {% for note in user.notes %}
   <li class="list-group-item">
-    <div style="white-space: pre-wrap;">{{ note.data }}</div> 
-    <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <div class="note-wrapper">
+        <div class="added-note-box"
+                contenteditable="true"
+                spellcheck="false"
+                id="note-{{ note.id }}"
+                oninput="autoResizeDiv(this); showSave('{{ note.id }}')">{{ note.data }}</div>
+        <button class="save-btn"
+                id="save-{{ note.id }}"
+                style="display:none;"
+                onclick="saveNote('{{ note.id }}')">
+            Save
+        </button>
+
+        <button type="button"
+                class="close delete-btn"
+                onclick="deleteNote('{{ note.id }}')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
   </li>
   {% endfor %}
-</ul> 
+</ul>
+<script>
+/* auto-resize contenteditable div */
+function autoResizeDiv(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+}
+/* on load, resize all existing note boxes */
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.added-note-box').forEach(function(el) {
+        autoResizeDiv(el);
+    });
+});
+
+/* show the Save button for a particular note */
+function showSave(id) {
+    var btn = document.getElementById("save-" + id);
+    if (btn) btn.style.display = "inline-block";
+}
+
+/* save note to server and hide Save button when done */
+function saveNote(id) {
+    var el = document.getElementById("note-" + id);
+    if (!el) return;
+
+    var content = el.innerText;
+
+    fetch("/edit-note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id, data: content })
+    }).then(function (resp) {
+        // hide save button on success (ignore body)
+        var btn = document.getElementById("save-" + id);
+        if (btn) btn.style.display = "none";
+        // ensure height matches updated content
+        autoResizeDiv(el);
+    }).catch(function (err) {
+        // still attempt to hide button on error for now
+        var btn = document.getElementById("save-" + id);
+        if (btn) btn.style.display = "none";
+    });
+}
+</script>
+<style>
+  /* note box */
+  .added-note-box {
+    width: 100%;
+    padding: 6px 8px;            /* normal space on all sides */
+    margin: 0;
+    border: 1px solid #2e2d2d;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    overflow: hidden;
+    line-height: 1.2;            /* natural spacing, no big gaps */
+    min-height: 20px;
+    box-sizing: border-box;
+  }
+
+  /* wrapper to contain X and keep it inside */
+  .note-wrapper {
+    position: relative;
+  }
+
+  /* delete X inside top-right */
+  .delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* save button styling and spacing below the box */
+  .save-btn {
+    background-color: #007bff; /* same blue as Add Note */
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-top: 8px;           /* creates gap below the box */
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .list-group-item {
+    border: none !important; /*for horizontal line blw boxes removing*/
+  }
+</style>
 <form method="POST">
   <textarea name="note" id="note" class="form-control"></textarea>
   <br />
