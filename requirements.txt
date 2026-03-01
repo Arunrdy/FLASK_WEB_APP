@@ -4,3 +4,4 @@ Flask-SQLAlchemy
 PyMySQL
 Werkzeug
 gunicorn
+psycopg2-binary
