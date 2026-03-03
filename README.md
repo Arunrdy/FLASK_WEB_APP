@@ -7,7 +7,7 @@ A full-stack web application built using **Flask**,**Python**,**MySQL**, and **S
 ## 🌐 Live Application
 
 🔗 **Live Demo:**  
-👉 https://YOUR_RENDER_PUBLIC_URL_HERE  
+👉 https://flask-web-app-kzaa.onrender.com
 
 
 ---
